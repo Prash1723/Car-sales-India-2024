@@ -21,6 +21,12 @@ sns.countplot(data=df, x='Body Type')
 plt.title("All car body types sold in India")
 plt.show()
 
-# Favourite
+# Favourite segment
+plt.figure(figsize=[15,4])
+sns.countplot(data=df, x='Segment')
+plt.title("Favourite segment in India")
+plt.show()
 
+# Summary
 print(df.select_dtypes('number').describe())
+
