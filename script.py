@@ -12,17 +12,15 @@ print(df.info())
 # Favourite manufacturer
 plt.figure(figsize=[15,4])
 sns.countplot(data=df, x='Make')
-plt.title("Indian's favourite manufacturers")
-plt.show()
-
-# Favourite model
-plt.figure(figsize=[4,15])
-sns.countplot(data=df, y='Model')
-plt.title("Indian's favourite model")
+plt.title("All manufacturers in India")
 plt.show()
 
 # Favourite body type
 plt.figure(figsize=[15,4])
 sns.countplot(data=df, x='Body Type')
-plt.title("Indian's favourite body type")
+plt.title("All car body types sold in India")
 plt.show()
+
+# Favourite
+
+print(df.select_dtypes('number').describe())
