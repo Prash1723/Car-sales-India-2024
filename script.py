@@ -9,19 +9,21 @@ print(df.head())
 
 print(df.info())
 
-# Favourite manufacturer
+# Univariate Analysis
+
+## Favourite manufacturer
 plt.figure(figsize=[15,4])
 sns.countplot(data=df, x='Make')
 plt.title("All manufacturers in India")
 plt.show()
 
-# Favourite body type
+## Favourite body type
 plt.figure(figsize=[15,4])
 sns.countplot(data=df, x='Body Type')
 plt.title("All car body types sold in India")
 plt.show()
 
-# Favourite segment
+## Favourite segment
 plt.figure(figsize=[15,4])
 sns.countplot(data=df, x='Segment')
 plt.title("Favourite segment in India")
@@ -36,4 +38,10 @@ print(df.select_dtypes('number').describe())
 plt.figure(figsize=[4,15])
 sns.countplot(data=df, y='Make', hue='Body Type')
 plt.title("All manufacturers in India")
+plt.show()
+
+## Trend Analysis
+plt.figure(figsize=[15,5])
+sns.lineplot(data=df, x='Months', y='Sales', hue='Make')
+plt.title("Sales trend of manufacturers in India")
 plt.show()
