@@ -30,3 +30,10 @@ plt.show()
 # Summary
 print(df.select_dtypes('number').describe())
 
+# Bivariate Analysis
+
+## Product body available from manufacturer
+plt.figure(figsize=[4,15])
+sns.countplot(data=df, y='Make', hue='Body Type')
+plt.title("All manufacturers in India")
+plt.show()
