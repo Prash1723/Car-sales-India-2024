@@ -29,6 +29,18 @@ sns.countplot(data=df, x='Segment')
 plt.title("Favourite segment in India")
 plt.show()
 
+## Sales by manufacturer
+plt.figure(figsize=[15,4])
+sns.barplot(data=df, x='Make', y='Sales')
+plt.title("Sales by manufacturers in India")
+plt.show()
+
+## Sales by body type
+plt.figure(figsize=[15,4])
+sns.barplot(data=df, x='Body Type', y='Sales')
+plt.title("Sales by car body types sold in India")
+plt.show()
+
 # Summary
 print(df.select_dtypes('number').describe())
 
