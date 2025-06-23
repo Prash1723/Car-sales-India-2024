@@ -30,14 +30,30 @@ plt.title("Favourite segment in India")
 plt.show()
 
 ## Sales by manufacturer
+make_sales = df.groupby('Make')['Sales'].sum().sort_values(ascending=False).reset_index()
+make_sales.columns = ['Make', 'Sales']
+
 plt.figure(figsize=[15,4])
-sns.barplot(data=df, x='Make', y='Sales')
+ax = sns.barplot(data=make_sales, x='Make', y='Sales')
+y_offset = 2
+# Annotation
+for i, t in enumerate(make_sales.Sales):
+    plt.text(x = i, y = t + y_offset, s = str(round(t, 2)), ha='center', fontsize=11, weight='bold')
+
 plt.title("Sales by manufacturers in India")
 plt.show()
 
 ## Sales by body type
+bt_sales = df.groupby('Body Type')['Sales'].sum().sort_values(ascending=False).reset_index()
+bt_sales.columns = ['Body Type', 'Sales']
+
 plt.figure(figsize=[15,4])
-sns.barplot(data=df, x='Body Type', y='Sales')
+ax = sns.barplot(data=bt_sales, x='Body Type', y='Sales')
+y_offset = 2
+# Annotation
+for i, t in enumerate(bt_sales.Sales):
+    plt.text(x = i, y = t + y_offset, s = str(round(t, 2)), ha='center', fontsize=11, weight='bold')
+
 plt.title("Sales by car body types sold in India")
 plt.show()
 
@@ -57,3 +73,5 @@ plt.figure(figsize=[15,5])
 sns.lineplot(data=df, x='Months', y='Sales', hue='Make')
 plt.title("Sales trend of manufacturers in India")
 plt.show()
+
+## 
