@@ -32,7 +32,6 @@ plt.show()
 ## Sales by manufacturer
 make_sales = df.groupby('Make')[['Sales', 'Total']].sum().sort_values(by='Sales',ascending=False).reset_index()
 make_sales.columns = ['Make', 'Sales', 'Total']
-make_sales['Sales_perc'] = make_sales.Sales/make_sales.Total
 
 plt.figure(figsize=[15,4])
 ax1 = sns.barplot(data=make_sales, x='Make', y='Sales')
