@@ -30,11 +30,12 @@ plt.title("Favourite segment in India")
 plt.show()
 
 ## Sales by manufacturer
-make_sales = df.groupby('Make')['Sales'].sum().sort_values(ascending=False).reset_index()
-make_sales.columns = ['Make', 'Sales']
+make_sales = df.groupby('Make')[['Sales', 'Total']].sum().sort_values(by='Sales',ascending=False).reset_index()
+make_sales.columns = ['Make', 'Sales', 'Total']
+make_sales['Sales_perc'] = make_sales.Sales/make_sales.Total
 
 plt.figure(figsize=[15,4])
-ax = sns.barplot(data=make_sales, x='Make', y='Sales')
+ax1 = sns.barplot(data=make_sales, x='Make', y='Sales')
 y_offset = 2
 # Annotation
 for i, t in enumerate(make_sales.Sales):
@@ -42,6 +43,18 @@ for i, t in enumerate(make_sales.Sales):
 
 plt.title("Sales by manufacturers in India")
 plt.show()
+
+## Percentage sales by manufacturer
+plt.figure(figsize=[15,4])
+ax2 = sns.barplot(data=make_sales, x='Make', y='Total')
+# Annotation
+for i, t in enumerate(make_sales.Total):
+     plt.text(x = i, y = t + y_offset, s = str(round(t, 2)), ha='center', fontsize=11, weight='bold')
+
+plt.title("Cars produced by manufacturers in India")
+plt.show()
+
+print(make_sales)
 
 ## Sales by body type
 bt_sales = df.groupby('Body Type')['Sales'].sum().sort_values(ascending=False).reset_index()
