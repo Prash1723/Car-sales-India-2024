@@ -54,28 +54,30 @@ plt.title("Cars produced by manufacturers in India")
 plt.show()
 
 ## Sales by body type
-bt_sales = df.groupby('Body Type')[['Sales', 'Total']].sum().sort_values(ascending=False).reset_index()
+bt_sales = df.groupby('Body Type')[['Sales', 'Total']].sum().sort_values(by='Sales',ascending=False).reset_index()
 bt_sales.columns = ['Body Type', 'Sales', 'Total']
+bt_sales['perc_sales'] = (bt_sales['Sales']*100)/bt_sales['Sales'].sum()
+bt_sales['perc_total'] = (bt_sales['Total']*100)/bt_sales['Total'].sum()
 
 plt.figure(figsize=[15,4])
-ax3 = sns.barplot(data=bt_sales, x='Body Type', y='Sales')
+ax3 = sns.barplot(data=bt_sales, x='Body Type', y='perc_sales')
 y_offset = 2
 # Annotation
-for i, t in enumerate(bt_sales.Sales):
-    plt.text(x = i, y = t + y_offset, s = str(round(t, 2)), ha='center', fontsize=11, weight='bold')
+for i, t in enumerate(bt_sales.perc_sales):
+    plt.text(x = i, y = t + y_offset, s = str(round(t, 2))+"%", ha='center', fontsize=11, weight='bold')
 
-plt.title("Sales by car body types sold in India")
+plt.title("Percentage sales by car body types sold in India")
 plt.show()
 
 ## Total production by car body type
 plt.figure(figsize=[15,4])
-ax4 = sns.barplot(data=bt_sales, x='Body Type', y='Total')
+ax4 = sns.barplot(data=bt_sales, x='Body Type', y='perc_total')
 y_offset = 2
 # Annotation
-for i, t in enumerate(bt_sales.Total):
-    plt.text(x = i, y = t + y_offset, s = str(round(t, 2)), ha='center', fontsize=11, weight='bold')
+for i, t in enumerate(bt_sales.perc_total):
+    plt.text(x = i, y = t + y_offset, s = str(round(t, 2))+"%", ha='center', fontsize=11, weight='bold')
 
-plt.title("Production by car body types sold in India")
+plt.title("Percentage production by car body types sold in India")
 plt.show()
 
 # Summary
