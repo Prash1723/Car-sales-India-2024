@@ -29,21 +29,23 @@ sns.countplot(data=df, x='Segment')
 plt.title("Favourite segment in India")
 plt.show()
 
-## Sales by manufacturer
+## Percentage sales by manufacturer
 make_sales = df.groupby('Make')[['Sales', 'Total']].sum().sort_values(by='Sales',ascending=False).reset_index()
 make_sales.columns = ['Make', 'Sales', 'Total']
+make_sales['perc_sales'] = (make_sales['Sales']*100)/make_sales['Sales'].sum()
+make_sales['perc_total'] = (make_sales['Total']*100)/make_sales['Total'].sum()
 
 plt.figure(figsize=[15,4])
-ax1 = sns.barplot(data=make_sales, x='Make', y='Sales')
+ax1 = sns.barplot(data=make_sales, x='Make', y='perc_sales')
 y_offset = 2
 # Annotation
-for i, t in enumerate(make_sales.Sales):
-    plt.text(x = i, y = t + y_offset, s = str(round(t, 2)), ha='center', fontsize=11, weight='bold')
+for i, t in enumerate(make_sales.perc_sales):
+    plt.text(x = i, y = t + y_offset, s = str(round(t, 2))+"%", ha='center', fontsize=11, weight='bold')
 
-plt.title("Sales by manufacturers in India")
+plt.title("Percentage sales by manufacturers in India")
 plt.show()
 
-## Percentage sales by manufacturer
+## Production by manufacturer
 plt.figure(figsize=[15,4])
 ax2 = sns.barplot(data=make_sales, x='Make', y='Total')
 # Annotation
@@ -78,7 +80,7 @@ y_offset = 2
 for i, t in enumerate(bt_sales.Total):
     plt.text(x = i, y = t + y_offset, s = str(round(t, 2)), ha='center', fontsize=11, weight='bold')
 
-plt.title("Percentage production by car body types sold in India")
+plt.title("Production by car body types sold in India")
 plt.show()
 
 # Summary
