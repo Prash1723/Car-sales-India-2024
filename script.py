@@ -67,15 +67,16 @@ for i, t in enumerate(bt_sales.perc_sales):
     plt.text(x = i, y = t + y_offset, s = str(round(t, 2))+"%", ha='center', fontsize=11, weight='bold')
 
 plt.title("Percentage sales by car body types sold in India")
+plt.x_range(0,60)
 plt.show()
 
 ## Total production by car body type
 plt.figure(figsize=[15,4])
-ax4 = sns.barplot(data=bt_sales, x='Body Type', y='perc_total')
+ax4 = sns.barplot(data=bt_sales, x='Body Type', y='Total')
 y_offset = 2
 # Annotation
-for i, t in enumerate(bt_sales.perc_total):
-    plt.text(x = i, y = t + y_offset, s = str(round(t, 2))+"%", ha='center', fontsize=11, weight='bold')
+for i, t in enumerate(bt_sales.Total):
+    plt.text(x = i, y = t + y_offset, s = str(round(t, 2)), ha='center', fontsize=11, weight='bold')
 
 plt.title("Percentage production by car body types sold in India")
 plt.show()
