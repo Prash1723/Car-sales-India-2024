@@ -69,7 +69,6 @@ for i, t in enumerate(bt_sales.perc_sales):
     plt.text(x = i, y = t + y_offset, s = str(round(t, 2))+"%", ha='center', fontsize=11, weight='bold')
 
 plt.title("Percentage sales by car body types sold in India")
-plt.x_range(0,60)
 plt.show()
 
 ## Total production by car body type
@@ -92,6 +91,15 @@ print(df.select_dtypes('number').describe())
 plt.figure(figsize=[4,15])
 sns.countplot(data=df, y='Make', hue='Body Type')
 plt.title("All manufacturers in India")
+plt.show()
+
+## Sales by manufacturer and body type
+bt_make = df.groupby(['Make', 'Body Type'])[['Sales', 'Total']].sum().sort_values(by='Sales', ascending=False).reset_index()
+bt_make.columns = ['Make', 'Body Type', 'Sales', 'Total']
+
+plt.figure(figsize=[4,15])
+sns.barplot(data=df, x='Sales', y='Make', hue='Body Type')
+plt.title("Sales by makers and body types in India")
 plt.show()
 
 ## Trend Analysis
