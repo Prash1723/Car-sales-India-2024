@@ -96,9 +96,10 @@ plt.show()
 ## Sales by manufacturer and body type
 bt_make = df.groupby(['Make', 'Body Type'])[['Sales', 'Total']].sum().sort_values(by='Sales', ascending=False).reset_index()
 bt_make.columns = ['Make', 'Body Type', 'Sales', 'Total']
+bt_make['perc_sales'] = (bt_make['Sales']*100)/bt_make['Sales'].sum()
 
 plt.figure(figsize=[4,15])
-sns.barplot(data=bt_make, x='Sales', y='Make', hue='Body Type')
+sns.barplot(data=bt_make, x='perc_sales', y='Make', hue='Body Type')
 plt.title("Sales by makers and body types in India")
 plt.show()
 
