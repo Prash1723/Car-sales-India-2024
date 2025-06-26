@@ -98,7 +98,7 @@ bt_make = df.groupby(['Make', 'Body Type'])[['Sales', 'Total']].sum().sort_value
 bt_make.columns = ['Make', 'Body Type', 'Sales', 'Total']
 
 plt.figure(figsize=[4,15])
-sns.barplot(data=df, x='Sales', y='Make', hue='Body Type')
+sns.barplot(data=bt_make, x='Sales', y='Make', hue='Body Type')
 plt.title("Sales by makers and body types in India")
 plt.show()
 
