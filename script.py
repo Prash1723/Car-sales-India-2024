@@ -99,7 +99,13 @@ bt_make.columns = ['Make', 'Body Type', 'Sales', 'Total']
 bt_make['perc_sales'] = (bt_make['Sales']*100)/bt_make['Sales'].sum()
 
 plt.figure(figsize=[4,15])
-sns.barplot(data=bt_make, x='perc_sales', y='Make', hue='Body Type')
+ax5 = sns.barplot(data=bt_make, x='perc_sales', y='Make', hue='Body Type')
+
+x_offset = 2
+# Annotation
+for i, t in enumerate(bt_make.perc_sales):
+    plt.text(x = t + x_offset, y = i, s = str(round(t, 2))+"%", va='center', fontsize=3, weight='bold')
+
 plt.title("Sales by makers and body types in India")
 plt.show()
 
