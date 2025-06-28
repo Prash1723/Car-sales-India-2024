@@ -97,7 +97,7 @@ plt.show()
 # bt_make = df.groupby(['Make', 'Body Type'])['Sales'].sum().sort_values(by='Sales', ascending=False).reset_index()
 # bt_make.columns = ['Make', 'Body Type', 'Sales']
 # bt_make['perc_sales'] = (bt_make['Sales']*100)/bt_make['Sales'].sum()
-bt_make2 = pd.pivot_table(df, values=['Sales'], index=['Make'], columns=['Body Type'], fill_value=0, aggfunc=sum)
+bt_make2 = pd.pivot_table(df, values=['Sales'], index=['Make'], columns=['Body Type'], fill_value=0, aggfunc="sum")
 
 # fig5, ax5 = plt.subplots(figsize=[4,15])
 # bottom = np.zeros(len(bt_make2))
