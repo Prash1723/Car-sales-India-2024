@@ -94,17 +94,32 @@ plt.title("All manufacturers in India")
 plt.show()
 
 ## Sales by manufacturer and body type
-bt_make = df.groupby(['Make', 'Body Type'])[['Sales', 'Total']].sum().sort_values(by='Sales', ascending=False).reset_index()
-bt_make.columns = ['Make', 'Body Type', 'Sales', 'Total']
-bt_make['perc_sales'] = (bt_make['Sales']*100)/bt_make['Sales'].sum()
+# bt_make = df.groupby(['Make', 'Body Type'])['Sales'].sum().sort_values(by='Sales', ascending=False).reset_index()
+# bt_make.columns = ['Make', 'Body Type', 'Sales']
+# bt_make['perc_sales'] = (bt_make['Sales']*100)/bt_make['Sales'].sum()
+bt_make2 = pd.pivot_table(df, values=['Sales'], index=['Make'], columns=['Body Type'], fill_value=0, aggfunc=sum)
 
-plt.figure(figsize=[4,15])
-ax5 = sns.barplot(data=bt_make, x='perc_sales', y='Make', hue='Body Type')
+# fig5, ax5 = plt.subplots(figsize=[4,15])
+# bottom = np.zeros(len(bt_make2))
 
-x_offset = 2
+# Create each bar with values using a loop
+ax5 = bt_make2.plot(kind='barh', figsize=(4,13), align='center')
+
+width = 2
 # Annotation
-for i, t in enumerate(bt_make.perc_sales):
-    plt.text(x = t + x_offset, y = i, s = str(round(t, 2))+"%", va='center', fontsize=3, weight='bold')
+for bar in ax5.patches:
+    width = bar.get_width()
+    ax5.text(
+        bar.get_x() + width + 10000,
+        bar.get_y() + 0.1,
+        width,
+        ha='center',
+        va='center',
+        color='black',
+        weight='bold',
+        size=8,
+        rotation='horizontal'
+    )
 
 plt.title("Sales by makers and body types in India")
 plt.show()
