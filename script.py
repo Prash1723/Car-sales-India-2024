@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -93,34 +94,60 @@ sns.countplot(data=df, y='Make', hue='Body Type')
 plt.title("All manufacturers in India")
 plt.show()
 
-## Sales by manufacturer and body type
-# bt_make = df.groupby(['Make', 'Body Type'])['Sales'].sum().sort_values(by='Sales', ascending=False).reset_index()
-# bt_make.columns = ['Make', 'Body Type', 'Sales']
+# Sales by manufacturer and body type
 # bt_make['perc_sales'] = (bt_make['Sales']*100)/bt_make['Sales'].sum()
-bt_make2 = pd.pivot_table(df, values=['Sales'], index=['Make'], columns=['Body Type'], fill_value=0, aggfunc="sum")
+bt_make2 = pd.pivot_table(
+    df, 
+    values=['Sales'], 
+    index=['Make'], 
+    columns=['Body Type'], 
+    fill_value=0, 
+    aggfunc="sum"
+    ).reset_index()
 
-# fig5, ax5 = plt.subplots(figsize=[4,15])
-# bottom = np.zeros(len(bt_make2))
+bt_make2.columns = ['Make', 'SUV', 'Hatchback', 'Sedan', 'MUV', 'Others']
+bt_make2['Total'] = bt_make2[['SUV', 'Hatchback', 'Sedan', 'MUV', 'Others']].sum(axis=1)
+
+bt_perc = bt_make2.select_dtypes('number').div(bt_make2['Total']*0.01, axis=0)
+bt_make2.update(bt_perc)
+bt_make2.drop('Total', axis=1, inplace=True)
+bt_make2.set_index('Make', inplace=True)
+
+fig5, ax5 = plt.subplots(figsize=[4,15])
+bottom = np.zeros(len(bt_make2))
 
 # Create each bar with values using a loop
-ax5 = bt_make2.plot(kind='barh', figsize=(4,13), align='center')
+for i, col in enumerate(bt_make2.columns):
+    ax5.barh(bt_make2.index, bt_make2[col], left=bottom, label=col)
+    bottom+=bt_make2[col].values
 
-width = 2
-# Annotation
+# Calculate total values for positioning the total value of stacked bar (100)
+totals = bt_make2.sum(axis=1)
+x_offset = 4
+
+# Assigning total length of the bar as label (annotation)
+for i, t in enumerate(totals):
+    ax5.text(t + x_offset, i, round(t), va='center', weight='bold')
+
+# Applying labels (annotation) for the middle bars
 for bar in ax5.patches:
     width = bar.get_width()
-    ax5.text(
-        bar.get_x() + width + 10000,
-        bar.get_y() + 0.1,
-        width,
-        ha='center',
-        va='center',
-        color='black',
-        weight='bold',
-        size=8,
-        rotation='horizontal'
-    )
+    if width > 3:  # Only label visible bars
+        ax5.text(
+            bar.get_x() + width / 2,
+            bar.get_y() + bar.get_height() / 2,
+            round(width),
+            ha='center',
+            va='center',
+            color='white',
+            weight='bold',
+            size=8
+        )
 
+# Chart control commands
+plt.xlim(0,200)
+ax5.legend(loc='upper right')
+plt.tight_layout()
 plt.title("Sales by makers and body types in India")
 plt.show()
 
