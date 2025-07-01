@@ -210,7 +210,7 @@ plt.title("Sales trend of manufacturers in India")
 plt.show()
 
 ## Seasonality for car sales
-seasons = df.groupby('Months')['Sales'].sum()
+seasons = df.groupby('Months')['Sales'].sum()*100/df['Sales'].sum()
 plt.figure(figsize=[15,5])
 sns.barplot(seasons)
 plt.show()
