@@ -212,5 +212,12 @@ plt.show()
 ## Seasonality for car sales
 seasons = df.groupby('Months')['Sales'].sum()*100/df['Sales'].sum()
 plt.figure(figsize=[15,5])
-sns.barplot(seasons)
+ax6 = sns.barplot(seasons)
+# Annotation
+y_offset = 0.2
+for i, t in enumerate(seasons):
+     plt.text(x = i, y = t + y_offset, s = str(round(t, 2))+"%", ha='center', fontsize=11, weight='bold')
+
+plt.title("Seasonality of cars sales in India")
 plt.show()
+
