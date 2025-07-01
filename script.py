@@ -209,4 +209,8 @@ sns.lineplot(data=df, x='Months', y='Sales', hue='Make')
 plt.title("Sales trend of manufacturers in India")
 plt.show()
 
-## 
+## Seasonality for car sales
+seasons = df.groupby('Months')['Sales'].sum()
+plt.figure(figsize=[15,5])
+sns.barplot(seasons)
+plt.show()
