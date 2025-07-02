@@ -221,3 +221,58 @@ for i, t in enumerate(seasons):
 plt.title("Seasonality of cars sales in India")
 plt.show()
 
+# Sales by manufacturer and body type
+seasons_bt = pd.pivot_table(
+    df, 
+    values=['Sales'], 
+    index=['Months'], 
+    columns=['Body Type'], 
+    fill_value=0, 
+    aggfunc="sum"
+    ).reset_index()
+
+seasons_bt.columns = ['Months', 'SUV', 'Hatchback', 'Sedan', 'MUV', 'Others']
+seasons_bt['Total'] = seasons_bt[['SUV', 'Hatchback', 'Sedan', 'MUV', 'Others']].sum(axis=1)
+
+sbt_perc = seasons_bt.select_dtypes('number').div(seasons_bt['Total']*0.01, axis=0)
+seasons_bt.update(sbt_perc)
+seasons_bt.drop('Total', axis=1, inplace=True)
+seasons_bt.set_index('Months', inplace=True)
+
+fig5, ax7 = plt.subplots(figsize=[4,15])
+bottom = np.zeros(len(seasons_bt))
+
+# Create each bar with values using a loop
+for i, col in enumerate(seasons_bt.columns):
+    ax7.barh(seasons_bt.index, seasons_bt[col], left=bottom, label=col)
+    bottom+=seasons_bt[col].values
+
+# Calculate total values for positioning the total value of stacked bar (100)
+totals = seasons_bt.sum(axis=1)
+x_offset = 4
+
+# Assigning total length of the bar as label (annotation)
+for i, t in enumerate(totals):
+    ax7.text(t + x_offset, i, round(t), va='center', weight='bold')
+
+# Applying labels (annotation) for the middle bars
+for bar in ax7.patches:
+    width = bar.get_width()
+    if width > 3:  # Only label visible bars
+        ax7.text(
+            bar.get_x() + width / 2,
+            bar.get_y() + bar.get_height() / 2,
+            round(width),
+            ha='center',
+            va='center',
+            color='white',
+            weight='bold',
+            size=8
+        )
+
+# Chart control commands
+plt.xlim(0,200)
+ax7.legend(loc='upper right')
+plt.tight_layout()
+plt.title("Seasonality in car body types sold in India")
+plt.show()
