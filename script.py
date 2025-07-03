@@ -105,7 +105,7 @@ bt_make1.columns = ['Make', 'SUV', 'Hatchback', 'Sedan', 'MUV', 'Others']
 bt_make1['Total'] = bt_make1[['SUV', 'Hatchback', 'Sedan', 'MUV', 'Others']].sum(axis=1)
 
 bt_perc1 = bt_make1.select_dtypes('number').div(bt_make1['Total']*0.01, axis=0)
-bt_make1.update(bt_perc1)
+bt_make1.update(bt_perc1.astype(int))
 bt_make1.drop('Total', axis=1, inplace=True)
 bt_make1.set_index('Make', inplace=True)
 
@@ -161,7 +161,7 @@ bt_make2.columns = ['Make', 'SUV', 'Hatchback', 'Sedan', 'MUV', 'Others']
 bt_make2['Total'] = bt_make2[['SUV', 'Hatchback', 'Sedan', 'MUV', 'Others']].sum(axis=1)
 
 bt_perc = bt_make2.select_dtypes('number').div(bt_make2['Total']*0.01, axis=0)
-bt_make2.update(bt_perc)
+bt_make2.update(bt_perc.astype(int))
 bt_make2.drop('Total', axis=1, inplace=True)
 bt_make2.set_index('Make', inplace=True)
 
@@ -235,7 +235,7 @@ seasons_bt.columns = ['Months', 'SUV', 'Hatchback', 'Sedan', 'MUV', 'Others']
 seasons_bt['Total'] = seasons_bt[['SUV', 'Hatchback', 'Sedan', 'MUV', 'Others']].sum(axis=1)
 
 sbt_perc = seasons_bt.select_dtypes('number').div(seasons_bt['Total']*0.01, axis=0)
-seasons_bt.update(sbt_perc)
+seasons_bt.update(sbt_perc.astype(int))
 seasons_bt.drop('Total', axis=1, inplace=True)
 seasons_bt.set_index('Months', inplace=True)
 
