@@ -10,6 +10,9 @@ print(df.head())
 
 print(df.info())
 
+# Preprocessing
+df['Segment'] = df['Segment'].replace({'\nUtility': 'Utility'})
+
 # Univariate Analysis
 
 ## Favourite manufacturer
@@ -275,4 +278,34 @@ plt.xlim(0,200)
 ax7.legend(loc='upper right')
 plt.tight_layout()
 plt.title("Seasonality in car body types sold in India")
+plt.show()
+
+## Seasonality for car segment sales
+seasons_sg = pd.pivot_table(
+    df, 
+    values=['Sales'], 
+    index=['Months'], 
+    columns=['Segment'], 
+    fill_value=0, 
+    aggfunc="sum"
+    ).reset_index()
+
+print(seasons_sg)
+
+seasons_sg.columns = ['Months', 'C2', 'C1', 'D2', 'B2', 'Premium', 'D1', 'Utility', 'A', 'B1']
+seasons_sg['Total'] = seasons_sg[['C2', 'C1', 'D2', 'B2', 'Premium', 'D1', 'Utility', 'A', 'B1']].sum(axis=1)
+
+sg_perc = seasons_sg.select_dtypes('number').div(seasons_sg['Total']*0.01, axis=0)
+seasons_sg.update(sg_perc.astype(int))
+seasons_sg.drop('Total', axis=1, inplace=True)
+seasons_sg.set_index('Months', inplace=True)
+
+plt.figure(figsize=[15,5])
+ax8 = sns.barplot(seasons_sg)
+# Annotation
+y_offset = 0.2
+for i, t in enumerate(seasons_sg):
+     plt.text(x = i, y = t + y_offset, s = str(round(t, 2))+"%", ha='center', fontsize=11, weight='bold')
+
+plt.title("Seasonality for car segments in India")
 plt.show()
