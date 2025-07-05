@@ -280,6 +280,62 @@ plt.tight_layout()
 plt.title("Seasonality in car body types sold in India")
 plt.show()
 
+# Sales by Manufacturer and segment
+seasons_msg = pd.pivot_table(
+    df, 
+    values=['Sales'], 
+    index=['Make'], 
+    columns=['Segment'], 
+    fill_value=0, 
+    aggfunc="sum"
+    ).reset_index()
+
+seasons_msg.columns = ['Make', 'C2', 'C1', 'D2', 'B2', 'Premium', 'D1', 'Utility', 'A', 'B1']
+seasons_msg['Total'] = seasons_msg[['C2', 'C1', 'D2', 'B2', 'Premium', 'D1', 'Utility', 'A', 'B1']].sum(axis=1)
+
+msg_perc = seasons_msg.select_dtypes('number').div(seasons_msg['Total']*0.01, axis=0)
+seasons_msg.update(msg_perc.astype(int))
+seasons_msg.drop('Total', axis=1, inplace=True)
+seasons_msg.set_index('Make', inplace=True)
+
+fig5, ax8 = plt.subplots(figsize=[4,15])
+bottom = np.zeros(len(seasons_msg))
+
+# Create each bar with values using a loop
+for i, col in enumerate(seasons_msg.columns):
+    ax8.barh(seasons_msg.index, seasons_msg[col], left=bottom, label=col)
+    bottom+=seasons_msg[col].values
+
+# Calculate total values for positioning the total value of stacked bar (100)
+totals = seasons_msg.sum(axis=1)
+x_offset = 4
+
+# Assigning total length of the bar as label (annotation)
+for i, t in enumerate(totals):
+    ax8.text(t + x_offset, i, round(t), va='center', weight='bold')
+
+# Applying labels (annotation) for the middle bars
+for bar in ax8.patches:
+    width = bar.get_width()
+    if width > 3:  # Only label visible bars
+        ax8.text(
+            bar.get_x() + width / 2,
+            bar.get_y() + bar.get_height() / 2,
+            round(width),
+            ha='center',
+            va='center',
+            color='white',
+            weight='bold',
+            size=8
+        )
+
+# Chart control commands
+plt.xlim(0,200)
+ax8.legend(loc='upper right')
+plt.tight_layout()
+plt.title("Seasonality in car body types sold in India")
+plt.show()
+
 ## Seasonality for car segment sales
 seasons_sg = pd.pivot_table(
     df, 
@@ -300,8 +356,8 @@ seasons_sg.update(sg_perc.astype(int))
 seasons_sg.drop('Total', axis=1, inplace=True)
 seasons_sg.set_index('Months', inplace=True)
 
-plt.figure(figsize=[15,5])
-ax8 = sns.barplot(seasons_sg)
+fig5, ax7 = plt.subplots(figsize=[4,15])
+bottom = np.zeros(len(seasons_sg))
 # Annotation
 y_offset = 0.2
 for i, t in enumerate(seasons_sg):
