@@ -360,12 +360,12 @@ fig5, ax9 = plt.subplots(figsize=[4,15])
 bottom = np.zeros(len(seasons_sg))
 
 # Create each bar with values using a loop
-for i, col in enumerate(seasons_msg.columns):
-    ax8.barh(seasons_msg.index, seasons_msg[col], left=bottom, label=col)
-    bottom+=seasons_msg[col].values
+for i, col in enumerate(seasons_sg.columns):
+    ax9.barh(seasons_sg.index, seasons_sg[col], left=bottom, label=col)
+    bottom+=seasons_sg[col].values
 
 # Calculate total values for positioning the total value of stacked bar (100)
-totals = seasons_msg.sum(axis=1)
+totals = seasons_sg.sum(axis=1)
 
 # Annotation
 y_offset = 2
