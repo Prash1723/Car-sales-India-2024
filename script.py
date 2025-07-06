@@ -356,10 +356,12 @@ seasons_sg.update(sg_perc.astype(int))
 seasons_sg.drop('Total', axis=1, inplace=True)
 seasons_sg.set_index('Months', inplace=True)
 
+print(seasons_sg)
+
 fig5, ax7 = plt.subplots(figsize=[4,15])
 bottom = np.zeros(len(seasons_sg))
 # Annotation
-y_offset = 0.2
+y_offset = 2
 for i, t in enumerate(seasons_sg):
      plt.text(x = i, y = t + y_offset, s = str(round(t, 2))+"%", ha='center', fontsize=11, weight='bold')
 
