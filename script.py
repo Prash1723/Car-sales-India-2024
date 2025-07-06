@@ -356,14 +356,36 @@ seasons_sg.update(sg_perc.astype(int))
 seasons_sg.drop('Total', axis=1, inplace=True)
 seasons_sg.set_index('Months', inplace=True)
 
-print(seasons_sg)
-
-fig5, ax7 = plt.subplots(figsize=[4,15])
+fig5, ax9 = plt.subplots(figsize=[4,15])
 bottom = np.zeros(len(seasons_sg))
+
+# Create each bar with values using a loop
+for i, col in enumerate(seasons_msg.columns):
+    ax8.barh(seasons_msg.index, seasons_msg[col], left=bottom, label=col)
+    bottom+=seasons_msg[col].values
+
+# Calculate total values for positioning the total value of stacked bar (100)
+totals = seasons_msg.sum(axis=1)
+
 # Annotation
 y_offset = 2
-for i, t in enumerate(seasons_sg):
+for i, t in enumerate(totals):
      plt.text(x = i, y = t + y_offset, s = str(round(t, 2))+"%", ha='center', fontsize=11, weight='bold')
+
+# Applying labels (annotation) for the middle bars
+for bar in ax9.patches:
+    width = bar.get_width()
+    if width > 3:  # Only label visible bars
+        ax9.text(
+            bar.get_x() + width / 2,
+            bar.get_y() + bar.get_height() / 2,
+            round(width),
+            ha='center',
+            va='center',
+            color='white',
+            weight='bold',
+            size=8
+        )
 
 plt.title("Seasonality for car segments in India")
 plt.show()
