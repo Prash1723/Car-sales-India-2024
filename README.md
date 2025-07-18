@@ -13,4 +13,42 @@ The aim of this project is to understand the car market in India.
    - Numpy
    - Matplotlib
 
+## Run
+
+To run this project, follow the steps:
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/Prash1723/Car-sales-India-2024.git
+```
+
+2. Navigate to the project folder:
+
+```bash
+cd Car-sales-India-2024
+```
+
+3. Install the required modules
+
+```bash
+pip3 install -r requirements.txt
+```
+
+4. Run the python file
+
+```bash
+python3 script.py
+```
+
+## License
+
+This project is licensed under the MIT License. See the `LICENSE` file for more information.
+
+## Acknowledgments
+
+The analysis is inspired by the author's desire to identify key insights from the car market in India.
+
 ## Contributing
+
+Contributions are welcome! If you find any issues or have suggestions for improvements, please open an issue or submit a pull request.
