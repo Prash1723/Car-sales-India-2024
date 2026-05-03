@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+from db_connect import db_query
 
 df = pd.read_excel(r'data/Car Sales in India - 2024 (Unpivot Version).xlsx')
 
@@ -38,6 +39,15 @@ make_sales = df.groupby('Make')[['Sales', 'Total']].sum().sort_values(by='Sales'
 make_sales.columns = ['Make', 'Sales', 'Total']
 make_sales['perc_sales'] = (make_sales['Sales']*100)/make_sales['Sales'].sum()
 make_sales['perc_total'] = (make_sales['Total']*100)/make_sales['Total'].sum()
+db_query.run(
+    "UPDATE car_sales.OEM_data \
+    SET Make=@make_sales.Make,\
+    Sales=@make_sales.Sales,\
+    Total=@make_sales.Total,\
+    perc_sales=@make_sales.perc_sales,\
+    perc_total=@make_sales.perc_total"
+    )
+
 
 plt.figure(figsize=[15,4])
 ax1 = sns.barplot(data=make_sales, x='Make', y='perc_sales')
