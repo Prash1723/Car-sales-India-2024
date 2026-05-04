@@ -20,34 +20,32 @@ df['Segment'] = df['Segment'].replace({'\nUtility': 'Utility'})
 plt.figure(figsize=[15,4])
 sns.countplot(data=df, x='Make')
 plt.title("All manufacturers in India")
-plt.show()
+plt.savefig('manufacturers.png')
 
 ## Favourite body type
 plt.figure(figsize=[15,4])
 sns.countplot(data=df, x='Body Type')
 plt.title("All car body types sold in India")
-plt.show()
+plt.savefig('car_body_type-sales.png')
 
 ## Favourite segment
 plt.figure(figsize=[15,4])
 sns.countplot(data=df, x='Segment')
 plt.title("Favourite segment in India")
-plt.show()
+plt.savefig('fav_segment.png')
 
 ## Percentage sales by manufacturer
 make_sales = df.groupby('Make')[['Sales', 'Total']].sum().sort_values(by='Sales',ascending=False).reset_index()
 make_sales.columns = ['Make', 'Sales', 'Total']
 make_sales['perc_sales'] = (make_sales['Sales']*100)/make_sales['Sales'].sum()
 make_sales['perc_total'] = (make_sales['Total']*100)/make_sales['Total'].sum()
-db_query.run(
-    "UPDATE car_sales.OEM_data \
-    SET Make=@make_sales.Make,\
-    Sales=@make_sales.Sales,\
-    Total=@make_sales.Total,\
-    perc_sales=@make_sales.perc_sales,\
-    perc_total=@make_sales.perc_total"
+db_query.run('UPDATE car_sales.OEM_data \
+    SET Make=@make_sales.Make, \
+    Sales=@make_sales.Sales, \
+    Total=@make_sales.Total, \
+    perc_sales=@make_sales.perc_sales, \
+    perc_total=@make_sales.perc_total'
     )
-
 
 plt.figure(figsize=[15,4])
 ax1 = sns.barplot(data=make_sales, x='Make', y='perc_sales')
@@ -57,7 +55,7 @@ for i, t in enumerate(make_sales.perc_sales):
     plt.text(x = i, y = t + y_offset, s = str(round(t, 2))+"%", ha='center', fontsize=11, weight='bold')
 
 plt.title("Percentage sales by manufacturers in India")
-plt.show()
+plt.savefig('percentage_sales-manufacturers.png')
 
 ## Production by manufacturer
 plt.figure(figsize=[15,4])
@@ -67,7 +65,7 @@ for i, t in enumerate(make_sales.Total):
      plt.text(x = i, y = t + y_offset, s = str(round(t, 2)), ha='center', fontsize=11, weight='bold')
 
 plt.title("Cars produced by manufacturers in India")
-plt.show()
+plt.savefig('cars_produced-manufacturers.png')
 
 ## Sales by body type
 bt_sales = df.groupby('Body Type')[['Sales', 'Total']].sum().sort_values(by='Sales',ascending=False).reset_index()
@@ -83,7 +81,7 @@ for i, t in enumerate(bt_sales.perc_sales):
     plt.text(x = i, y = t + y_offset, s = str(round(t, 2))+"%", ha='center', fontsize=11, weight='bold')
 
 plt.title("Percentage sales by car body types sold in India")
-plt.show()
+plt.savefig('percentage_sale-car_body_type.png')
 
 ## Total production by car body type
 plt.figure(figsize=[15,4])
@@ -94,7 +92,7 @@ for i, t in enumerate(bt_sales.Total):
     plt.text(x = i, y = t + y_offset, s = str(round(t, 2)), ha='center', fontsize=11, weight='bold')
 
 plt.title("Production by car body types sold in India")
-plt.show()
+plt.savefig('production-car_body_tyoes.png')
 
 # Summary
 print(df.select_dtypes('number').describe())
@@ -158,7 +156,7 @@ plt.xlim(0,200)
 ax4.legend(loc='upper right')
 plt.tight_layout()
 plt.title("Count of car makers and body types in India")
-plt.show()
+plt.savefig('car_makers-body_type.png')
 
 # Sales by manufacturer and body type
 bt_make2 = pd.pivot_table(
@@ -214,13 +212,13 @@ plt.xlim(0,200)
 ax5.legend(loc='upper right')
 plt.tight_layout()
 plt.title("Sales by makers and body types in India")
-plt.show()
+plt.savefig('sales-makers_&_body.png')
 
 ## Trend Analysis
 plt.figure(figsize=[15,5])
 sns.lineplot(data=df, x='Months', y='Sales', hue='Make')
 plt.title("Sales trend of manufacturers in India")
-plt.show()
+plt.savefig('Sales_trend-manufacturers.png')
 
 ## Seasonality for car sales
 seasons = df.groupby('Months')['Sales'].sum()*100/df['Sales'].sum()
@@ -232,7 +230,7 @@ for i, t in enumerate(seasons):
      plt.text(x = i, y = t + y_offset, s = str(round(t, 2))+"%", ha='center', fontsize=11, weight='bold')
 
 plt.title("Seasonality of cars sales in India")
-plt.show()
+plt.savefig('seasonal_sales-cars.png')
 
 # Sales by manufacturer and body type
 seasons_bt = pd.pivot_table(
@@ -288,7 +286,7 @@ plt.xlim(0,200)
 ax7.legend(loc='upper right')
 plt.tight_layout()
 plt.title("Seasonality in car body types sold in India")
-plt.show()
+plt.savefig('seasonal_sales-car_body_types.png')
 
 # Sales by Manufacturer and segment
 seasons_msg = pd.pivot_table(
@@ -344,7 +342,7 @@ plt.xlim(0,200)
 ax8.legend(loc='upper right')
 plt.tight_layout()
 plt.title("Seasonality in car body types sold in India")
-plt.show()
+plt.savefig('seasonal_car_sales-body_type.png')
 
 ## Seasonality for car segment sales
 seasons_sg = pd.pivot_table(
@@ -398,4 +396,4 @@ for bar in ax9.patches:
         )
 
 plt.title("Seasonality for car segments in India")
-plt.show()
+plt.savefig('seasonal_sales-car_segments.png')

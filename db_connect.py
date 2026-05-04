@@ -1,10 +1,11 @@
 import mysql.connector
+from mysql.connector import Error
 
 class db_query:
     def __init__(self, query):
         self.query = query
 
-    def run(self):
+    def run(self, query):
         # Establish mysql connection
         cnx = mysql.connector.connect(host="localhost", user="rider", password="Delhi2mumbai@", database="car_sales")
 
@@ -12,7 +13,7 @@ class db_query:
         mycursor = cnx.cursor()
 
         # Execute a query
-        mycursor.execute(self.query)
+        mycursor.execute(query)
 
         # Fetch results
         result = mycursor.fetchall()
