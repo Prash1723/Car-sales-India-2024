@@ -3,6 +3,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from db_connect import db_query
+from sqlalchemy import create_engine
+import urllib.parse
+
+password = "Delhi2mumbai@"  # Your real password here
+encoded_password = urllib.parse.quote_plus(password)
+
+engine = create_engine(f"mysql+mysqlconnector://rider:{encoded_password}@localhost/car_sales")
 
 df = pd.read_excel(r'data/Car Sales in India - 2024 (Unpivot Version).xlsx')
 
@@ -37,15 +44,12 @@ plt.savefig('fav_segment.png')
 ## Percentage sales by manufacturer
 make_sales = df.groupby('Make')[['Sales', 'Total']].sum().sort_values(by='Sales',ascending=False).reset_index()
 make_sales.columns = ['Make', 'Sales', 'Total']
-make_sales['perc_sales'] = (make_sales['Sales']*100)/make_sales['Sales'].sum()
-make_sales['perc_total'] = (make_sales['Total']*100)/make_sales['Total'].sum()
-db_query.run('UPDATE car_sales.OEM_data \
-    SET Make=@make_sales.Make, \
-    Sales=@make_sales.Sales, \
-    Total=@make_sales.Total, \
-    perc_sales=@make_sales.perc_sales, \
-    perc_total=@make_sales.perc_total'
-    )
+make_sales['perc_sales'] = round((make_sales['Sales']*100)/make_sales['Sales'].sum(), 2)
+make_sales['perc_total'] = round((make_sales['Total']*100)/make_sales['Total'].sum(), 2)
+
+# 3. Use 'replace' to drop the old data and insert the new
+# This effectively updates the whole table by starting fresh
+make_sales.to_sql('OEM_data', con=engine, schema='car_sales', if_exists='replace', index=False)
 
 plt.figure(figsize=[15,4])
 ax1 = sns.barplot(data=make_sales, x='Make', y='perc_sales')
@@ -69,12 +73,14 @@ plt.savefig('cars_produced-manufacturers.png')
 
 ## Sales by body type
 bt_sales = df.groupby('Body Type')[['Sales', 'Total']].sum().sort_values(by='Sales',ascending=False).reset_index()
-bt_sales.columns = ['Body Type', 'Sales', 'Total']
-bt_sales['perc_sales'] = (bt_sales['Sales']*100)/bt_sales['Sales'].sum()
-bt_sales['perc_total'] = (bt_sales['Total']*100)/bt_sales['Total'].sum()
+bt_sales.columns = ['body_type', 'Sales', 'Total']
+bt_sales['perc_sales'] = round((bt_sales['Sales']*100)/bt_sales['Sales'].sum(), 2)
+bt_sales['perc_total'] = round((bt_sales['Total']*100)/bt_sales['Total'].sum(), 2)
+
+bt_sales.to_sql('Body_data2024', con=engine, schema='car_sales', if_exists='replace', index=False)
 
 plt.figure(figsize=[15,4])
-ax3 = sns.barplot(data=bt_sales, x='Body Type', y='perc_sales')
+ax3 = sns.barplot(data=bt_sales, x='body_type', y='perc_sales')
 y_offset = 2
 # Annotation
 for i, t in enumerate(bt_sales.perc_sales):
@@ -85,7 +91,7 @@ plt.savefig('percentage_sale-car_body_type.png')
 
 ## Total production by car body type
 plt.figure(figsize=[15,4])
-ax4 = sns.barplot(data=bt_sales, x='Body Type', y='Total')
+ax4 = sns.barplot(data=bt_sales, x='body_type', y='Total')
 y_offset = 2
 # Annotation
 for i, t in enumerate(bt_sales.Total):

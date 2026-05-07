@@ -5,7 +5,7 @@ class db_query:
     def __init__(self, query):
         self.query = query
 
-    def run(self, query):
+    def run(self, query, params=None):
         # Establish mysql connection
         cnx = mysql.connector.connect(host="localhost", user="rider", password="Delhi2mumbai@", database="car_sales")
 
